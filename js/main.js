@@ -41,6 +41,7 @@ phina.define('Player', {
         this.x = x;
         this.y = y;
         this.SPEED = 5;
+        this.bullet = null;
         },
 
     update: function (app) {
@@ -60,8 +61,39 @@ phina.define('Player', {
 
         }
 
+
+        if (this.bullet == null && key.getKey('space')) {
+            this.bullet = Bullet(this.x, this.top).addChildTo(this.parent);
+        }
+        if (this.bullet != null && this.bullet.isInvalid) {
+            this.bullet.remove();
+            this.bullet = null;
+        }
+
     }
 
+});
+
+phina.define('Bullet', {
+    superClass: 'RectangleShape',
+    init: function (x, y) {
+        this.superInit({
+            width: 5,
+            height: 12,
+            fill: 'white',
+        });
+        this.x = x;
+        this.y = y;
+        this.isInvalid = false;
+        this.SPEED = 5;
+    },
+
+    update: function () {
+            this.y -= this.SPEED;
+            if (this.bottom < 0) {
+                this.isInvalid = true;}
+
+        }
 });
 
 phina.main(() => {
